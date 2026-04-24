@@ -1,24 +1,28 @@
-//
-//  ContentView.swift
-//  Status Bar Alerts for Factorio
-//
-//  Created by lesha on 25. 4. 2026..
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    var vm: ViewModel
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
+            ForEach(FactorioAlert.allCases, id: \.self) { alert in
+                AlertIconView(
+                    alert: alert,
+                    count: vm.alerts[alert] ?? 0
+                )
+            }
         }
         .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(
+        vm: {
+            let vm = ViewModel()
+            vm.alerts = [:]
+            vm.hasAccess = false
+            return vm
+        }()
+    )
 }

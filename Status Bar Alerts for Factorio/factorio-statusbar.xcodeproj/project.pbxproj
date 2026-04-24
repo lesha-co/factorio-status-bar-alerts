@@ -6,21 +6,33 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		406349862F9C2FCC0097E6ED /* Sandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406349852F9C2FCA0097E6ED /* Sandbox.swift */; };
+		4063498A2F9C40000097E6ED /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406349892F9C40000097E6ED /* ViewModel.swift */; };
+		40EA964C2F9C200B0065EDA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EA96452F9C200B0065EDA7 /* AppDelegate.swift */; };
+		40EA964D2F9C200B0065EDA7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EA96472F9C200B0065EDA7 /* ContentView.swift */; };
+		40EA964E2F9C200B0065EDA7 /* Defines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EA96482F9C200B0065EDA7 /* Defines.swift */; };
+		40EA964F2F9C200B0065EDA7 /* factorio_statusbarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EA96492F9C200B0065EDA7 /* factorio_statusbarApp.swift */; };
+		40EA96502F9C200B0065EDA7 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EA964B2F9C200B0065EDA7 /* FileWatcher.swift */; };
+		40EA96512F9C200B0065EDA7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40EA96462F9C200B0065EDA7 /* Assets.xcassets */; };
+		40EA96562F9C21B70065EDA7 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 40EA96552F9C21B70065EDA7 /* AppIcon.icon */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Status Bar Alerts for Factorio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		40CF523C2F9C3550003B6481 /* factorio-statusbar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "factorio-statusbar.xcodeproj"; sourceTree = "<group>"; };
+		406349852F9C2FCA0097E6ED /* Sandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sandbox.swift; sourceTree = "<group>"; };
+		406349892F9C40000097E6ED /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		40EA95F72F9077110065EDA7 /* Status Bar Alerts for Factorio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Status Bar Alerts for Factorio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		40EA96452F9C200B0065EDA7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		40EA96462F9C200B0065EDA7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		40EA96472F9C200B0065EDA7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		40EA96482F9C200B0065EDA7 /* Defines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defines.swift; sourceTree = "<group>"; };
+		40EA96492F9C200B0065EDA7 /* factorio_statusbarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = factorio_statusbarApp.swift; sourceTree = "<group>"; };
+		40EA964B2F9C200B0065EDA7 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
+		40EA96552F9C21B70065EDA7 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		404D81132F9C352000E888BD /* Status Bar Alerts for Factorio */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Status Bar Alerts for Factorio";
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
-		404D810E2F9C352000E888BD /* Frameworks */ = {
+		40EA95F42F9077110065EDA7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -30,25 +42,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		404D81082F9C352000E888BD = {
+		40EA95EE2F9077110065EDA7 = {
 			isa = PBXGroup;
 			children = (
-				404D81132F9C352000E888BD /* Status Bar Alerts for Factorio */,
-				404D81122F9C352000E888BD /* Products */,
+				40EA96452F9C200B0065EDA7 /* AppDelegate.swift */,
+				406349852F9C2FCA0097E6ED /* Sandbox.swift */,
+				40EA96552F9C21B70065EDA7 /* AppIcon.icon */,
+				40EA96462F9C200B0065EDA7 /* Assets.xcassets */,
+				40EA96472F9C200B0065EDA7 /* ContentView.swift */,
+				40EA96482F9C200B0065EDA7 /* Defines.swift */,
+				40EA96492F9C200B0065EDA7 /* factorio_statusbarApp.swift */,
+				40EA964B2F9C200B0065EDA7 /* FileWatcher.swift */,
+				406349892F9C40000097E6ED /* ViewModel.swift */,
+				40EA95F82F9077110065EDA7 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		404D81122F9C352000E888BD /* Products */ = {
+		40EA95F82F9077110065EDA7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		40CF52402F9C3550003B6481 /* Products */ = {
-			isa = PBXGroup;
-			children = (
+				40EA95F72F9077110065EDA7 /* Status Bar Alerts for Factorio.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -56,90 +69,90 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		404D81102F9C352000E888BD /* Status Bar Alerts for Factorio */ = {
+		40EA95F62F9077110065EDA7 /* Status Bar Alerts for Factorio */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 404D811C2F9C352100E888BD /* Build configuration list for PBXNativeTarget "Status Bar Alerts for Factorio" */;
+			buildConfigurationList = 40EA96022F9077110065EDA7 /* Build configuration list for PBXNativeTarget "Status Bar Alerts for Factorio" */;
 			buildPhases = (
-				404D810D2F9C352000E888BD /* Sources */,
-				404D810E2F9C352000E888BD /* Frameworks */,
-				404D810F2F9C352000E888BD /* Resources */,
+				40EA95F32F9077110065EDA7 /* Sources */,
+				40EA95F42F9077110065EDA7 /* Frameworks */,
+				40EA95F52F9077110065EDA7 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				404D81132F9C352000E888BD /* Status Bar Alerts for Factorio */,
-			);
 			name = "Status Bar Alerts for Factorio";
 			packageProductDependencies = (
 			);
-			productName = "Status Bar Alerts for Factorio";
-			productReference = 404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */;
+			productName = "factorio-statusbar";
+			productReference = 40EA95F72F9077110065EDA7 /* Status Bar Alerts for Factorio.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		404D81092F9C352000E888BD /* Project object */ = {
+		40EA95EF2F9077110065EDA7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
-					404D81102F9C352000E888BD = {
+					40EA95F62F9077110065EDA7 = {
 						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
-			buildConfigurationList = 404D810C2F9C352000E888BD /* Build configuration list for PBXProject "Status Bar Alerts for Factorio" */;
+			buildConfigurationList = 40EA95F22F9077110065EDA7 /* Build configuration list for PBXProject "factorio-statusbar" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 404D81082F9C352000E888BD;
+			mainGroup = 40EA95EE2F9077110065EDA7;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 404D81122F9C352000E888BD /* Products */;
+			productRefGroup = 40EA95F82F9077110065EDA7 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 40CF52402F9C3550003B6481 /* Products */;
-					ProjectRef = 40CF523C2F9C3550003B6481 /* factorio-statusbar.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
-				404D81102F9C352000E888BD /* Status Bar Alerts for Factorio */,
+				40EA95F62F9077110065EDA7 /* Status Bar Alerts for Factorio */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		404D810F2F9C352000E888BD /* Resources */ = {
+		40EA95F52F9077110065EDA7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40EA96512F9C200B0065EDA7 /* Assets.xcassets in Resources */,
+				40EA96562F9C21B70065EDA7 /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		404D810D2F9C352000E888BD /* Sources */ = {
+		40EA95F32F9077110065EDA7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40EA964C2F9C200B0065EDA7 /* AppDelegate.swift in Sources */,
+				406349862F9C2FCC0097E6ED /* Sandbox.swift in Sources */,
+				40EA964D2F9C200B0065EDA7 /* ContentView.swift in Sources */,
+				40EA964E2F9C200B0065EDA7 /* Defines.swift in Sources */,
+				40EA964F2F9C200B0065EDA7 /* factorio_statusbarApp.swift in Sources */,
+				40EA96502F9C200B0065EDA7 /* FileWatcher.swift in Sources */,
+				4063498A2F9C40000097E6ED /* ViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		404D811A2F9C352100E888BD /* Debug */ = {
+		40EA96002F9077110065EDA7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -202,7 +215,7 @@
 			};
 			name = Debug;
 		};
-		404D811B2F9C352100E888BD /* Release */ = {
+		40EA96012F9077110065EDA7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -257,25 +270,27 @@
 			};
 			name = Release;
 		};
-		404D811D2F9C352100E888BD /* Debug */ = {
+		40EA96032F9077110065EDA7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_APP_SANDBOX = YES;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Status Bar Alerts for Factorio";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "co.lesha.Status-Bar-Alerts-for-Factorio";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.lesha.factorio-statusbar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -287,25 +302,37 @@
 			};
 			name = Debug;
 		};
-		404D811E2F9C352100E888BD /* Release */ = {
+		40EA96042F9077110065EDA7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = NO;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Status Bar Alerts for Factorio";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "co.lesha.Status-Bar-Alerts-for-Factorio";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.lesha.factorio-statusbar";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -320,25 +347,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		404D810C2F9C352000E888BD /* Build configuration list for PBXProject "Status Bar Alerts for Factorio" */ = {
+		40EA95F22F9077110065EDA7 /* Build configuration list for PBXProject "factorio-statusbar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				404D811A2F9C352100E888BD /* Debug */,
-				404D811B2F9C352100E888BD /* Release */,
+				40EA96002F9077110065EDA7 /* Debug */,
+				40EA96012F9077110065EDA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		404D811C2F9C352100E888BD /* Build configuration list for PBXNativeTarget "Status Bar Alerts for Factorio" */ = {
+		40EA96022F9077110065EDA7 /* Build configuration list for PBXNativeTarget "Status Bar Alerts for Factorio" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				404D811D2F9C352100E888BD /* Debug */,
-				404D811E2F9C352100E888BD /* Release */,
+				40EA96032F9077110065EDA7 /* Debug */,
+				40EA96042F9077110065EDA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 404D81092F9C352000E888BD /* Project object */;
+	rootObject = 40EA95EF2F9077110065EDA7 /* Project object */;
 }

@@ -1,0 +1,62 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.45042,0.00000,0.00000,1.00000",
+      "display-p3:0.13713,0.00000,0.00000,1.00000"
+    ],
+    "orientation" : {
+      "start" : {
+        "x" : 0.5,
+        "y" : 0
+      },
+      "stop" : {
+        "x" : 0.5,
+        "y" : 0.7
+      }
+    }
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill" : {
+            "solid" : "srgb:0.88426,0.39792,0.00000,1.00000"
+          },
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "SVG Image 4.svg",
+          "name" : "SVG Image 4",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              209.06679572485996,
+              -203.63120001688208
+            ]
+          }
+        },
+        {
+          "fill" : {
+            "solid" : "srgb:0.88639,0.00000,0.00000,1.00000"
+          },
+          "glass" : true,
+          "image-name" : "SVG Image 5.svg",
+          "name" : "SVG Image 5"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : [
+      "macOS"
+    ]
+  }
+}
