@@ -20,7 +20,10 @@ struct ContentView: View {
     ContentView(
         vm: {
             let vm = ViewModel()
-            vm.alerts = [:]
+            vm.alerts = [
+                .entity_destroyed: 12,
+                .no_storage: 5
+            ]
             vm.hasAccess = false
             return vm
         }()
