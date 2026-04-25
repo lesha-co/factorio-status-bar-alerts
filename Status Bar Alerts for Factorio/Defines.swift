@@ -100,7 +100,7 @@ struct AlertIconView: View {
     var body: some View {
         let i = icon(alert)
         Image(systemName: i.name).foregroundColor(
-            colorScheme == .dark ? i.UILightThemeColor : i.color
+            colorScheme == .dark ?  i.color :i.UILightThemeColor
         ).frame(width: 20)
         Text("\(count)").frame(width: 20)
     }
