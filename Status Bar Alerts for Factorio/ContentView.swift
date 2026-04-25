@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    var vm: ViewModel
+    @ObservedObject var vm: ViewModel
     var grantAccess: (() -> Void)?
 
     var body: some View {
