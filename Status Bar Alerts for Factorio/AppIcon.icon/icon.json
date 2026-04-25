@@ -21,12 +21,13 @@
         {
           "blend-mode" : "normal",
           "fill" : {
-            "solid" : "srgb:0.88426,0.39792,0.00000,1.00000"
+            "automatic-gradient" : "display-p3:0.76224,0.39107,0.14110,1.00000"
           },
           "glass" : true,
           "hidden" : false,
           "image-name" : "SVG Image 4.svg",
           "name" : "SVG Image 4",
+          "opacity" : 1,
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
@@ -41,7 +42,8 @@
           },
           "glass" : true,
           "image-name" : "SVG Image 5.svg",
-          "name" : "SVG Image 5"
+          "name" : "SVG Image 5",
+          "opacity" : 0.8
         }
       ],
       "shadow" : {
