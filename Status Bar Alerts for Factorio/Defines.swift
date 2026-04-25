@@ -49,7 +49,7 @@ func icon(_ alert: FactorioAlert) -> Icon {
         )
     case .no_material_for_construction:
         .init(
-            name: "gearshape.circle.fill",
+            name: "gearshape.fill",
             color: .yellow,
             UILightThemeColor: .primary
         )

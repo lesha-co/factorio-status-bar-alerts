@@ -63,6 +63,12 @@ func requestAccessToAppSupport(directoryURL: URL, completion: @escaping (URL?) -
     }
 }
 
+/// Remove the saved security bookmark and stop accessing the security-scoped resource.
+func resetBookmark(securityScopedURL: URL?) {
+    securityScopedURL?.stopAccessingSecurityScopedResource()
+    UserDefaults.standard.removeObject(forKey: bookmarkKey)
+}
+
 // MARK: - Private helpers
 
 private func saveBookmark(for url: URL) {

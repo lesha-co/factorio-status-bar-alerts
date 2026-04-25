@@ -16,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var securityScopedURL: URL?
 
     private var alertActive: Bool = false
+
     private var blinkTimer: Timer?
 
     private func createButton() -> NSStatusItem? {
@@ -77,11 +78,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func startBlinking() {
-        guard blinkTimer == nil else { return }
+        if blinkTimer != nil {
+            blinkTimer?.invalidate()
+        }
 
         blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
             self.alertActive.toggle()
-
             for (_, statusItem) in self.buttons {
 
                 guard let button = statusItem.button else { continue }
@@ -104,10 +106,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Format: {username},{alert_kind}:{alert_count}
         let components = trimmed.components(separatedBy: ",")
-        guard components.count >= 2 else {
-            print("Invalid data format: \(trimmed)")
-            return
-        }
 
         var alerts: [FactorioAlert: Int] = Dictionary(
             uniqueKeysWithValues: FactorioAlert.allCases.map { ($0, 0) })

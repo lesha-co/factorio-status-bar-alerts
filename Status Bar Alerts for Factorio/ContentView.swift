@@ -6,6 +6,9 @@ struct ContentView: View {
 
     var body: some View {
         if vm.hasAccess {
+            Text(vm.isFactorioRunning ? "Factorio is running" : "Factorio is not running")
+                .font(.headline)
+                .padding()
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
                 ForEach(FactorioAlert.allCases, id: \.self) { alert in
                     AlertIconView(
