@@ -14,16 +14,7 @@ struct factorio_statusbarApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environmentObject(appDelegate.viewModel)
+            ContentView(vm: appDelegate.viewModel, grantAccess: appDelegate.grantAccess)
         }
-    }
-}
-
-struct RootView: View {
-    @EnvironmentObject var viewModel: ViewModel
-
-    var body: some View {
-        ContentView(vm: viewModel)
     }
 }

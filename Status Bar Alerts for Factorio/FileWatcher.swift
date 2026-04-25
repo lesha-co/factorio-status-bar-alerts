@@ -2,8 +2,8 @@ import AppKit
 
 var fileSource: DispatchSourceFileSystemObject?
 
-func monitorFile(filename: String, completion: @escaping (String) -> Void) {
-    let fileURL = URL(fileURLWithPath: filename)
+func monitorFile(fileURL: URL, completion: @escaping (String) -> Void) {
+    
     let directoryURL = fileURL.deletingLastPathComponent()
     let fileName = fileURL.lastPathComponent
     print("Watching \(fileName) in \(directoryURL.path)")

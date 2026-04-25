@@ -1,11 +1,19 @@
 import AppKit
 import SwiftUI
 
+let factorioAppSupportURL = URL(
+    filePath: NSString("~/Library/Application Support/factorio/")
+        .expandingTildeInPath)
+
+let factorioLogFile = "script-output/alerts.log"
+
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var popover = NSPopover()
     private var buttons: [FactorioAlert: NSStatusItem] = [:]
     let viewModel = ViewModel()
+    /// Keeps the security-scoped resource alive for the lifetime of the app.
+    private var securityScopedURL: URL?
 
     private var alertActive: Bool = false
     private var blinkTimer: Timer?
@@ -132,13 +140,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // popover.contentViewController = NSHostingController(rootView: MenuContentView())
         startBlinking()
 
+        // Try to restore a previously-saved security bookmark
+        if let url = restoreBookmarkAccess() {
+            securityScopedURL = url
+            self.viewModel.hasAccess = true
+            startMonitoring(baseURL: url)
+        }
+    }
+
+    /// Begin monitoring the Factorio alerts log file.
+    private func startMonitoring(baseURL: URL) {
+        print("startMonitoring()")
         monitorFile(
-            filename: NSString("~/Library/Application Support/factorio/script-output/alerts.log")
-                .expandingTildeInPath
+            fileURL: baseURL.appendingPathComponent(factorioLogFile)
         ) { result in
             self.onFileChange(data: result)
         }
+    }
 
+    /// Called from the UI when the user taps "Grant Access".
+    func grantAccess() {
+        requestAccessToAppSupport(directoryURL: factorioAppSupportURL) { [weak self] url in
+            guard let self, let url else {
+                return
+            }
+            self.securityScopedURL = url
+            self.viewModel.hasAccess = true
+            self.startMonitoring(baseURL: url)
+        }
     }
 
     @objc func togglePopover(_ sender: Any?) {
