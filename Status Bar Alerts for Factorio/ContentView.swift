@@ -76,7 +76,9 @@ struct MainView: View {
                 }
             }
             Button {
-                print("todo")
+                if let url = URL(string: "https://www.patreon.com/cw/leshenka") {
+                    NSWorkspace.shared.open(url)
+                }
             } label: {
                 Image(systemName: "dollarsign.circle")
                     .symbolRenderingMode(.palette)
