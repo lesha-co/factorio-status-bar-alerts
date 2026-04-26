@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// let modName = "macos-status-bar-alerts"
+let modName = "combat-research"
+
 enum FactorioAlert: Int, CaseIterable {
     case entity_destroyed = 0
     case entity_under_attack = 1
@@ -100,7 +103,7 @@ struct AlertIconView: View {
     var body: some View {
         let i = icon(alert)
         Image(systemName: i.name).foregroundColor(
-            colorScheme == .dark ?  i.color :i.UILightThemeColor
+            colorScheme == .dark ? i.color : i.UILightThemeColor
         ).frame(width: 20)
         Text("\(count)").frame(width: 20)
     }

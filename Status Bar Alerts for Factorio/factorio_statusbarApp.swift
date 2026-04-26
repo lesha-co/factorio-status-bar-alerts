@@ -18,5 +18,23 @@ struct factorio_statusbarApp: App {
                 .frame(width: 400, height: 200)
         }
         .windowResizability(.contentSize)
+        .commands {
+            RevokeAccessCommands(
+                viewModel: appDelegate.viewModel, revokeAccess: appDelegate.revokeAccess)
+        }
+    }
+}
+
+struct RevokeAccessCommands: Commands {
+    @ObservedObject var viewModel: ViewModel
+    let revokeAccess: () -> Void
+
+    var body: some Commands {
+        CommandGroup(after: .newItem) {
+            Button("Revoke Folder Access") {
+                revokeAccess()
+            }
+            .disabled(!viewModel.hasAccess)
+        }
     }
 }

@@ -6,6 +6,7 @@ let factorioAppSupportURL = URL(
         .expandingTildeInPath)
 
 let factorioLogFile = "script-output/alerts.log"
+let factorioModsDir = "mods"
 
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -62,8 +63,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setAlerts(alerts: [FactorioAlert: Int]) {
-        self.viewModel.alerts = alerts
         DispatchQueue.main.async { [self] in
+            self.viewModel.alerts = alerts
             for (alert, count) in alerts {
                 let statusItem = self.getOrCreateButton(alert: alert, count: count)
                 if count == 0 {
@@ -170,14 +171,51 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    /// Check whether the Factorio mod is installed in the mods directory.
+    private func checkModInstalled(baseURL: URL) {
+        let modsURL = baseURL.appendingPathComponent(factorioModsDir)
+        let fm = FileManager.default
+        do {
+            let contents = try fm.contentsOfDirectory(atPath: modsURL.path)
+            let found = contents.contains { $0.hasPrefix(modName) }
+            DispatchQueue.main.async {
+                self.viewModel.isModInstalled = found
+            }
+            if !found {
+                print("Mod '\(modName)' not found in \(modsURL.path)")
+            }
+        } catch {
+            print("Failed to list mods directory: \(error)")
+            DispatchQueue.main.async {
+                self.viewModel.isModInstalled = false
+            }
+        }
+    }
+
     /// Begin monitoring the Factorio alerts log file.
     private func startMonitoring(baseURL: URL) {
         print("startMonitoring()")
+        checkModInstalled(baseURL: baseURL)
         monitorFile(
             fileURL: baseURL.appendingPathComponent(factorioLogFile)
         ) { result in
             self.onFileChange(data: result)
         }
+    }
+
+    /// Called from the menu bar to revoke folder access.
+    func revokeAccess() {
+        resetBookmark(securityScopedURL: securityScopedURL)
+        securityScopedURL = nil
+        fileSource?.cancel()
+        fileSource = nil
+        viewModel.hasAccess = false
+        viewModel.isModInstalled = false
+        viewModel.alerts = [:]
+        for (_, statusItem) in buttons {
+            NSStatusBar.system.removeStatusItem(statusItem)
+        }
+        buttons.removeAll()
     }
 
     /// Called from the UI when the user taps "Grant Access".
