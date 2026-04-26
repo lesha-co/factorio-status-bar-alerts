@@ -15,6 +15,8 @@ struct factorio_statusbarApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(vm: appDelegate.viewModel, grantAccess: appDelegate.grantAccess)
+                .frame(width: 400, height: 200)
         }
+        .windowResizability(.contentSize)
     }
 }

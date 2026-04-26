@@ -110,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var alerts: [FactorioAlert: Int] = Dictionary(
             uniqueKeysWithValues: FactorioAlert.allCases.map { ($0, 0) })
         // Skip first component (username), parse remaining alert pairs
-        for i in 1..<components.count {
+        for i in 0..<components.count {
             let pair = components[i].components(separatedBy: ":")
             guard pair.count == 2,
                 let alertId = Int(pair[0]),
