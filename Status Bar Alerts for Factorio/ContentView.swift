@@ -1,13 +1,15 @@
 import SwiftUI
 
 struct ModWarning: View {
+    var onModInstall: (() -> Void)
+
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: "puzzlepiece.extension")
                 .font(.system(size: 32))
                 .foregroundColor(.secondary)
 
-            Text("The **macos-status-bar-alerts** mod is not installed.")
+            Text("The **\(modName)** mod is not installed.")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
 
@@ -21,9 +23,11 @@ struct ModWarning: View {
                         NSWorkspace.shared.open(url)
                     }
                 }
+                .controlSize(.large)
                 Button("Install mod directly") {
-
+                    onModInstall()
                 }
+                .controlSize(.large)
             }
         }
         .padding()
@@ -32,7 +36,7 @@ struct ModWarning: View {
 }
 
 struct FolderAccessWarning: View {
-    var onRequest: (() -> Void)?
+    var onRequest: (() -> Void)
 
     var body: some View {
         VStack(spacing: 12) {
@@ -46,7 +50,7 @@ struct FolderAccessWarning: View {
                 .foregroundColor(.secondary)
 
             Button("Grant Folder Access") {
-                onRequest?()
+                onRequest()
             }
             .controlSize(.large)
         }
@@ -59,33 +63,43 @@ struct MainView: View {
     @ObservedObject var vm: ViewModel
 
     var body: some View {
-        Text(vm.isFactorioRunning ? "Factorio is running" : "Factorio is not running")
-            .font(.headline)
-            .padding()
-        Text(vm.hasAccess ? "Had access" : "No access")
-            .font(.headline)
-            .padding()
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
-            ForEach(FactorioAlert.allCases, id: \.self) { alert in
-                AlertIconView(
-                    alert: alert,
-                    count: vm.alerts[alert] ?? 0
-                )
+        VStack {
+            Text(vm.hasAccess ? "Has access" : "No access")
+            Text(vm.isFactorioRunning ? "Factorio is running" : "Factorio is not running")
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
+                ForEach(FactorioAlert.allCases, id: \.self) { alert in
+                    AlertIconView(
+                        alert: alert,
+                        count: vm.alerts[alert] ?? 0
+                    )
+                }
             }
-        }
-        .padding()
+            Button {
+                print("todo")
+            } label: {
+                Image(systemName: "dollarsign.circle")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(Color.primary, Color.accentColor)
+                Text("Consider donating")
+            }
+            .padding()
+        }.padding()
     }
 }
 
 struct ContentView: View {
     @ObservedObject var vm: ViewModel
     var grantAccess: (() -> Void)?
+    var onModInstall: (() -> Void)?
 
     var body: some View {
         if vm.hasAccess && vm.isModInstalled {
             MainView(vm: vm)
         } else if vm.hasAccess && !vm.isModInstalled {
-            ModWarning()
+            ModWarning {
+                onModInstall?()
+            }
         } else {
             FolderAccessWarning {
                 grantAccess?()
@@ -94,7 +108,7 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview("Folder warning") {
     ContentView(
         vm: {
             let vm = ViewModel()
@@ -109,7 +123,7 @@ struct ContentView: View {
     )
 }
 
-#Preview {
+#Preview("Main") {
     ContentView(
         vm: {
             let vm = ViewModel()
@@ -124,6 +138,6 @@ struct ContentView: View {
         grantAccess: nil
     )
 }
-#Preview {
-    ModWarning()
+#Preview("Mod warning") {
+    ModWarning(onModInstall: {})
 }

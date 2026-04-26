@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-// let modName = "macos-status-bar-alerts"
-let modName = "combat-research"
+ let modName = "macos-status-bar-alerts"
 
 enum FactorioAlert: Int, CaseIterable {
     case entity_destroyed = 0

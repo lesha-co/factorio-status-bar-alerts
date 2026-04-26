@@ -165,15 +165,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         startBlinking()
         // Try to restore a previously-saved security bookmark
         if let url = restoreBookmarkAccess() {
-            securityScopedURL = url
+            self.securityScopedURL = url
             self.viewModel.hasAccess = true
             startMonitoring(baseURL: url)
         }
     }
 
+    func getModsDirectory(baseURL: URL) -> URL {
+        return baseURL.appendingPathComponent(factorioModsDir)
+    }
+
     /// Check whether the Factorio mod is installed in the mods directory.
     private func checkModInstalled(baseURL: URL) {
-        let modsURL = baseURL.appendingPathComponent(factorioModsDir)
+        let modsURL = getModsDirectory(baseURL: baseURL)
         let fm = FileManager.default
         do {
             let contents = try fm.contentsOfDirectory(atPath: modsURL.path)
@@ -216,6 +220,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSStatusBar.system.removeStatusItem(statusItem)
         }
         buttons.removeAll()
+    }
+    func installMod() {
+        guard let securityScopedURL else {
+            print("No base URL set")
+            return
+        }
+        let modsURL = getModsDirectory(baseURL: securityScopedURL)
+        guard let modSourceURL = Bundle.main.url(forResource: modName, withExtension: nil) else {
+            print("Mod '\(modName)' not found in app bundle")
+            return
+        }
+        let destinationURL = modsURL.appendingPathComponent(modName)
+        let fm = FileManager.default
+        do {
+            if fm.fileExists(atPath: destinationURL.path) {
+                try fm.removeItem(at: destinationURL)
+            }
+            try fm.copyItem(at: modSourceURL, to: destinationURL)
+            print("Installed mod to \(destinationURL.path)")
+            DispatchQueue.main.async {
+                self.checkModInstalled(baseURL: securityScopedURL)
+            }
+        } catch {
+            print("Failed to install mod: \(error)")
+        }
     }
 
     /// Called from the UI when the user taps "Grant Access".

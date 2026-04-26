@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		405C61A72F9EBAB600E3CA54 /* macos-status-bar-alerts in Resources */ = {isa = PBXBuildFile; fileRef = 405C61A62F9EBAB600E3CA54 /* macos-status-bar-alerts */; };
 		406349862F9C2FCC0097E6ED /* Sandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406349852F9C2FCA0097E6ED /* Sandbox.swift */; };
 		4063498A2F9C40000097E6ED /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 406349892F9C40000097E6ED /* ViewModel.swift */; };
 		40EA964C2F9C200B0065EDA7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EA96452F9C200B0065EDA7 /* AppDelegate.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		405C61A62F9EBAB600E3CA54 /* macos-status-bar-alerts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "macos-status-bar-alerts"; path = "../macos-status-bar-alerts"; sourceTree = "<group>"; };
 		406349852F9C2FCA0097E6ED /* Sandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sandbox.swift; sourceTree = "<group>"; };
 		406349892F9C40000097E6ED /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		40EA95F72F9077110065EDA7 /* Status Bar Alerts for Factorio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Status Bar Alerts for Factorio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,6 +47,7 @@
 		40EA95EE2F9077110065EDA7 = {
 			isa = PBXGroup;
 			children = (
+				405C61A62F9EBAB600E3CA54 /* macos-status-bar-alerts */,
 				40EA96452F9C200B0065EDA7 /* AppDelegate.swift */,
 				406349852F9C2FCA0097E6ED /* Sandbox.swift */,
 				40EA96552F9C21B70065EDA7 /* AppIcon.icon */,
@@ -127,6 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				405C61A72F9EBAB600E3CA54 /* macos-status-bar-alerts in Resources */,
 				40EA96512F9C200B0065EDA7 /* Assets.xcassets in Resources */,
 				40EA96562F9C21B70065EDA7 /* AppIcon.icon in Resources */,
 			);

@@ -1,0 +1,9 @@
+{
+  "name": "macos-status-bar-alerts",
+  "version": "0.1.0",
+  "title": "MacOS Status Bar Alerts",
+  "author": "Aljeksej K",
+  "factorio_version": "2.0",
+  "dependencies": ["base >= 2.0"],
+  "description": "This mod displays Factorio alerts in the macOS status bar."
+}

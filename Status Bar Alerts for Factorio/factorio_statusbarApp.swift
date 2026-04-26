@@ -14,13 +14,20 @@ struct factorio_statusbarApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(vm: appDelegate.viewModel, grantAccess: appDelegate.grantAccess)
-                .frame(width: 400, height: 200)
+            ContentView(
+                vm: appDelegate.viewModel,
+                grantAccess: appDelegate.grantAccess,
+                onModInstall: appDelegate.installMod
+            )
+            .frame(width: 400, height: 200)
         }
         .windowResizability(.contentSize)
         .commands {
             RevokeAccessCommands(
-                viewModel: appDelegate.viewModel, revokeAccess: appDelegate.revokeAccess)
+                viewModel: appDelegate.viewModel,
+                revokeAccess: appDelegate.revokeAccess,
+                installMod: appDelegate.installMod
+            )
         }
     }
 }
@@ -28,6 +35,7 @@ struct factorio_statusbarApp: App {
 struct RevokeAccessCommands: Commands {
     @ObservedObject var viewModel: ViewModel
     let revokeAccess: () -> Void
+    let installMod: () -> Void
 
     var body: some Commands {
         CommandGroup(after: .newItem) {
@@ -35,6 +43,11 @@ struct RevokeAccessCommands: Commands {
                 revokeAccess()
             }
             .disabled(!viewModel.hasAccess)
+
+            Button("Install Mod") {
+                installMod()
+            }
+
         }
     }
 }

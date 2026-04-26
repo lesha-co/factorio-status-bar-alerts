@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Status Bar Alerts for Factorio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		405C61702F9D7B7200E3CA54 /* factorio-statusbar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "factorio-statusbar.xcodeproj"; sourceTree = "<group>"; };
 		40CF523C2F9C3550003B6481 /* factorio-statusbar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "factorio-statusbar.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -15,6 +16,11 @@
 		404D81132F9C352000E888BD /* Status Bar Alerts for Factorio */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Status Bar Alerts for Factorio";
+			sourceTree = "<group>";
+		};
+		405C61A12F9EB3D600E3CA54 /* macos-status-bar-alerts */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "macos-status-bar-alerts";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -33,6 +39,7 @@
 		404D81082F9C352000E888BD = {
 			isa = PBXGroup;
 			children = (
+				405C61A12F9EB3D600E3CA54 /* macos-status-bar-alerts */,
 				404D81132F9C352000E888BD /* Status Bar Alerts for Factorio */,
 				404D81122F9C352000E888BD /* Products */,
 			);
@@ -42,6 +49,13 @@
 			isa = PBXGroup;
 			children = (
 				404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		405C61742F9D7B7200E3CA54 /* Products */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +84,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				404D81132F9C352000E888BD /* Status Bar Alerts for Factorio */,
+				405C61A12F9EB3D600E3CA54 /* macos-status-bar-alerts */,
 			);
 			name = "Status Bar Alerts for Factorio";
 			packageProductDependencies = (
@@ -109,6 +124,10 @@
 				{
 					ProductGroup = 40CF52402F9C3550003B6481 /* Products */;
 					ProjectRef = 40CF523C2F9C3550003B6481 /* factorio-statusbar.xcodeproj */;
+				},
+				{
+					ProductGroup = 405C61742F9D7B7200E3CA54 /* Products */;
+					ProjectRef = 405C61702F9D7B7200E3CA54 /* factorio-statusbar.xcodeproj */;
 				},
 			);
 			projectRoot = "";
