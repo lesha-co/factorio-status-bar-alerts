@@ -23,28 +23,29 @@ struct factorio_statusbarApp: App {
         }
         .windowResizability(.contentSize)
         .commands {
-            RevokeAccessCommands(
+            MenuCommands(
                 viewModel: appDelegate.viewModel,
                 revokeAccess: appDelegate.revokeAccess,
                 installMod: appDelegate.installMod
             )
         }
+
     }
 }
 
-struct RevokeAccessCommands: Commands {
+struct MenuCommands: Commands {
     @ObservedObject var viewModel: ViewModel
     let revokeAccess: () -> Void
     let installMod: () -> Void
 
     var body: some Commands {
-        CommandGroup(after: .newItem) {
+        CommandGroup(after: .appSettings) {
             Button("Revoke Folder Access") {
                 revokeAccess()
             }
             .disabled(!viewModel.hasAccess)
 
-            Button("Install Mod") {
+            Button("Install Mod directly") {
                 installMod()
             }
 
