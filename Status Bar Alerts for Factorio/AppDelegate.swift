@@ -63,54 +63,63 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func setAlerts(alerts: [FactorioAlert: Int]) {
         self.viewModel.alerts = alerts
-        for (alert, count) in alerts {
-            let statusItem = getOrCreateButton(alert: alert, count: count)
-            if count == 0 {
-                guard let btn = statusItem else { continue }
-                NSStatusBar.system.removeStatusItem(btn)
-                buttons[alert] = nil
-            } else {
-                statusItem?.button?.title = "\(count)"
-            }
-
-        }
-
-    }
-
-    private func startBlinking() {
-        if blinkTimer != nil {
-            blinkTimer?.invalidate()
-        }
-
-        blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-            self.alertActive.toggle()
-            for (_, statusItem) in self.buttons {
-
-                guard let button = statusItem.button else { continue }
-                DispatchQueue.main.async {
-                    button.appearsDisabled = self.alertActive
+        DispatchQueue.main.async { [self] in
+            for (alert, count) in alerts {
+                let statusItem = self.getOrCreateButton(alert: alert, count: count)
+                if count == 0 {
+                    guard let btn = statusItem else { continue }
+                    NSStatusBar.system.removeStatusItem(btn)
+                    self.buttons[alert] = nil
+                } else {
+                    statusItem?.button?.title = "\(count)"
                 }
             }
         }
 
     }
 
-    func onFileChange(data: String) {
-        let trimmed = data.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
-            DispatchQueue.main.async {
-                self.setAlerts(alerts: [:])
+    private func startBlinking() {
+        let schedule = {
+            self.blinkTimer?.invalidate()
+
+            self.blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                self.alertActive.toggle()
+                let runningApps = NSWorkspace.shared.runningApplications
+                let appIdentifiers = runningApps.map {
+                    ($0.bundleIdentifier)
+                }
+                let factorioRunning = appIdentifiers.contains("com.factorio")
+                self.viewModel.isFactorioRunning = factorioRunning
+
+                for (_, statusItem) in self.buttons {
+                    guard let button = statusItem.button else { continue }
+                    button.appearsDisabled = self.alertActive
+                    button.isHidden = !factorioRunning
+                }
             }
-            return
         }
 
-        // Format: {username},{alert_kind}:{alert_count}
-        let components = trimmed.components(separatedBy: ",")
+        if Thread.isMainThread {
+            schedule()
+        } else {
+            DispatchQueue.main.async(execute: schedule)
+        }
+    }
 
+    func syncTimer(currentTick: Int) {
+        // let ticksSinceLastWhole = currentTick % 60
+        // let ticksToNextWhole = 60 - ticksSinceLastWhole
+        // let secondsToNextWhole = Double(ticksToNextWhole) / 60.0
+        DispatchQueue.main.async {
+            self.startBlinking()
+        }
+    }
+
+    func createAlerts(components: [String]) -> [FactorioAlert: Int] {
         var alerts: [FactorioAlert: Int] = Dictionary(
             uniqueKeysWithValues: FactorioAlert.allCases.map { ($0, 0) })
         // Skip first component (username), parse remaining alert pairs
-        for i in 0..<components.count {
+        for i in 1..<components.count {
             let pair = components[i].components(separatedBy: ":")
             guard pair.count == 2,
                 let alertId = Int(pair[0]),
@@ -122,22 +131,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             alerts[alert] = alertCount
         }
+        return alerts
+    }
 
-        DispatchQueue.main.async {
-            self.setAlerts(alerts: alerts)
+    func onFileChange(data: String) {
+        let trimmed = data.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let components = trimmed.components(separatedBy: ",")
+
+        guard !trimmed.isEmpty else {
+            self.setAlerts(alerts: [:])
+            return
         }
+
+        guard let tick = Int(components[0]) else {
+            print("Failed to parse tick: \(components[0])")
+            return
+        }
+
+        syncTimer(currentTick: tick)
+        let alerts = createAlerts(components: components)
+        self.setAlerts(alerts: alerts)
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         guard ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" else {
             return
         }
-
         // configure popover content
         popover.contentSize = NSSize(width: 100, height: 100)
         // popover.contentViewController = NSHostingController(rootView: MenuContentView())
         startBlinking()
-
         // Try to restore a previously-saved security bookmark
         if let url = restoreBookmarkAccess() {
             securityScopedURL = url
