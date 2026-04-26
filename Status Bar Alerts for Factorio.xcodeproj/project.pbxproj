@@ -8,7 +8,6 @@
 
 /* Begin PBXFileReference section */
 		404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Status Bar Alerts for Factorio.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		405C61702F9D7B7200E3CA54 /* factorio-statusbar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "factorio-statusbar.xcodeproj"; sourceTree = "<group>"; };
 		40CF523C2F9C3550003B6481 /* factorio-statusbar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "factorio-statusbar.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,13 +48,6 @@
 			isa = PBXGroup;
 			children = (
 				404D81112F9C352000E888BD /* Status Bar Alerts for Factorio.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		405C61742F9D7B7200E3CA54 /* Products */ = {
-			isa = PBXGroup;
-			children = (
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -124,10 +116,6 @@
 				{
 					ProductGroup = 40CF52402F9C3550003B6481 /* Products */;
 					ProjectRef = 40CF523C2F9C3550003B6481 /* factorio-statusbar.xcodeproj */;
-				},
-				{
-					ProductGroup = 405C61742F9D7B7200E3CA54 /* Products */;
-					ProjectRef = 405C61702F9D7B7200E3CA54 /* factorio-statusbar.xcodeproj */;
 				},
 			);
 			projectRoot = "";
