@@ -7,7 +7,7 @@
 
 import SwiftUI
 
- let modName = "macos-status-bar-alerts"
+let modName = "macos-status-bar-alerts"
 
 enum FactorioAlert: Int, CaseIterable {
     case entity_destroyed = 0
@@ -94,18 +94,4 @@ func icon(_ alert: FactorioAlert) -> Icon {
     }
 }
 
-struct AlertIconView: View {
-    let alert: FactorioAlert
-    let count: Int
-    @Environment(\.colorScheme) var colorScheme
 
-    var body: some View {
-        let i = icon(alert)
-        Group {
-            Image(systemName: i.name).foregroundColor(
-                colorScheme == .dark ? i.color : i.UILightThemeColor
-            ).frame(width: 20)
-            Text("\(count)").frame(width: 20)
-        }
-    }
-}

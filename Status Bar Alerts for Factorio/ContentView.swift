@@ -1,11 +1,28 @@
 import SwiftUI
 
+struct AlertIconView: View {
+    let alert: FactorioAlert
+    let count: Int
+    @Environment(\.colorScheme) var colorScheme
+
+    var body: some View {
+        let i = icon(alert)
+        HStack {
+            Image(systemName: i.name).foregroundColor(
+                colorScheme == .dark ? i.color : i.UILightThemeColor
+            )
+            .font(.system(size: 24))
+            .frame(width: 40)
+            Text("\(count)").font(.system(size: 24))
+        }
+    }
+}
 struct MainView: View {
     @ObservedObject var vm: ViewModel
 
     var body: some View {
         VStack(spacing: 16) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
                 ForEach(FactorioAlert.allCases, id: \.self) { alert in
                     AlertIconView(
                         alert: alert,
@@ -38,7 +55,7 @@ struct ContentView: View {
     func respondToModeChange() {
         guard let window = NSApp.windows.first else { return }
         var frame = window.frame
-        frame.size.width = mode ? 300 : 550
+        frame.size.width = mode ? 400 : 550
         NSAnimationContext.runAnimationGroup { ctx in
             ctx.duration = 0.3
             ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
