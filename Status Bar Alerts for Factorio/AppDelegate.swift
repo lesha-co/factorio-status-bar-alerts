@@ -221,6 +221,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         buttons.removeAll()
     }
+
+    func openFactorioFolder() {
+        guard let securityScopedURL else {
+            print("No base URL set")
+            return
+        }
+        let modsURL = getModsDirectory(baseURL: securityScopedURL)
+        NSWorkspace.shared.open(modsURL)
+    }
+    func deleteMod() {
+        guard let securityScopedURL else {
+            print("No base URL set")
+            return
+        }
+        let modsURL = getModsDirectory(baseURL: securityScopedURL)
+        let fm = FileManager.default
+        let destinationURL = modsURL.appendingPathComponent(modName)
+        do {
+            if fm.fileExists(atPath: destinationURL.path) {
+                try fm.removeItem(at: destinationURL)
+                print("Deleted mod at \(destinationURL.path)")
+                DispatchQueue.main.async {
+                    self.checkModInstalled(baseURL: securityScopedURL)
+                }
+            } else {
+                print("Mod not found at \(destinationURL.path)")
+            }
+        } catch {
+            print("Failed to delete mod: \(error)")
+        }
+    }
     func installMod() {
         guard let securityScopedURL else {
             print("No base URL set")

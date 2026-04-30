@@ -26,7 +26,9 @@ struct factorio_statusbarApp: App {
             MenuCommands(
                 viewModel: appDelegate.viewModel,
                 revokeAccess: appDelegate.revokeAccess,
-                installMod: appDelegate.installMod
+                installMod: appDelegate.installMod,
+                openFactorioFolder: appDelegate.openFactorioFolder,
+                deleteMod: appDelegate.deleteMod
             )
         }
 
@@ -37,6 +39,8 @@ struct MenuCommands: Commands {
     @ObservedObject var viewModel: ViewModel
     let revokeAccess: () -> Void
     let installMod: () -> Void
+    let openFactorioFolder: () -> Void
+    let deleteMod: () -> Void
 
     var body: some Commands {
         CommandGroup(after: .appSettings) {
@@ -47,6 +51,14 @@ struct MenuCommands: Commands {
 
             Button("Install Mod directly") {
                 installMod()
+            }
+            
+            Button("Delete Mod") {
+                deleteMod()
+            }
+            
+            Button("Open Factorio application data folder") {
+                openFactorioFolder()
             }
 
         }

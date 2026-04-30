@@ -5,5 +5,6 @@
   "author": "Aljeksej K",
   "factorio_version": "2.0",
   "dependencies": ["base >= 2.0"],
-  "description": "This mod displays Factorio alerts in the macOS status bar."
+  "description": "This mod displays Factorio alerts in the macOS status bar.",
+  "homepage": "https://github.com/lesha-co/factorio-status-bar-alerts"
 }

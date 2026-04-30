@@ -64,7 +64,6 @@ struct MainView: View {
 
     var body: some View {
         VStack {
-            Text(vm.hasAccess ? "Has access" : "No access")
             Text(vm.isFactorioRunning ? "Factorio is running" : "Factorio is not running")
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
@@ -76,7 +75,7 @@ struct MainView: View {
                 }
             }
             Button {
-                if let url = URL(string: "https://www.patreon.com/cw/leshenka") {
+                if let url = URL(string: "https://lesha.co/donate") {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
