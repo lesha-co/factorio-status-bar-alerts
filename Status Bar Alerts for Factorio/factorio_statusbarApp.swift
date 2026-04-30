@@ -48,18 +48,19 @@ struct MenuCommands: Commands {
             }
             .disabled(!viewModel.hasAccess)
 
-            Button("Install Mod directly") {
-                installMod()
-            }
-            
-            Button("Delete Mod") {
-                deleteMod()
-            }
-            
             Button("Open Factorio application data folder") {
                 openFactorioFolder()
             }
 
+            Divider()
+
+            Button("Install Mod directly") {
+                installMod()
+            }
+
+            Button("Delete Mod") {
+                deleteMod()
+            }
         }
     }
 }
