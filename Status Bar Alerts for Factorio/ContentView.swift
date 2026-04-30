@@ -4,7 +4,7 @@ struct MainView: View {
     @ObservedObject var vm: ViewModel
 
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4)) {
                 ForEach(FactorioAlert.allCases, id: \.self) { alert in
                     AlertIconView(
@@ -18,12 +18,12 @@ struct MainView: View {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
-                Image(systemName: "dollarsign.circle")
+                Image(systemName: "heart.circle")
                     .symbolRenderingMode(.palette)
                     .foregroundStyle(Color.primary, Color.accentColor)
                 Text("Consider donating")
             }
-            .padding()
+            
         }.padding()
     }
 }
@@ -33,17 +33,45 @@ struct ContentView: View {
     var grantAccess: (() -> Void)?
     var onModInstall: (() -> Void)?
 
+    private var mode: Bool { vm.hasAccess && vm.isModInstalled && vm.isFactorioRunning }
+
+    func respondToModeChange() {
+        guard let window = NSApp.windows.first else { return }
+        var frame = window.frame
+        frame.size.width = mode ? 300 : 550
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.3
+            ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            window.animator().setFrame(frame, display: true)
+        }
+    }
+
     func openModWebsite() {
         if let url = URL(string: "https://mods.factorio.com/mod/" + modName) {
             NSWorkspace.shared.open(url)
         }
     }
-    
+
     var body: some View {
-        if vm.hasAccess && vm.isModInstalled && vm.isFactorioRunning {
-            MainView(vm: vm)
-        } else {
-            ErrorContent(folderAccess: vm.hasAccess, modInstalled: vm.isModInstalled, onRequestFolderAccess: grantAccess, onRequestModInstallation: onModInstall, onRequestOpenFactorioModWebsite: openModWebsite)
+        Group {
+            if mode {
+                MainView(vm: vm)
+            } else {
+                ErrorContent(
+                    folderAccess: vm.hasAccess,
+                    modInstalled: vm.isModInstalled,
+                    onRequestFolderAccess: grantAccess,
+                    onRequestModInstallation: onModInstall,
+                    onRequestOpenFactorioModWebsite: openModWebsite
+                )
+            }
+        }
+        .frame(maxWidth: 550, idealHeight: 200, alignment: .init(horizontal: .center, vertical: .top))
+        .onChange(of: mode) {
+            respondToModeChange()
+        }
+        .onAppear() {
+            respondToModeChange()
         }
     }
 }
@@ -64,5 +92,3 @@ struct ContentView: View {
         grantAccess: nil
     )
 }
-
-
