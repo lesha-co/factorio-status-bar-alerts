@@ -19,7 +19,6 @@ struct factorio_statusbarApp: App {
                 grantAccess: appDelegate.grantAccess,
                 onModInstall: appDelegate.installMod
             )
-            .frame(width: 400, height: 200)
         }
         .windowResizability(.contentSize)
         .commands {
