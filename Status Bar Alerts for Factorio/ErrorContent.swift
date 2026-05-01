@@ -13,6 +13,7 @@ struct ErrorContent: View {
     var onRequestFolderAccess: (() -> Void)?
     var onRequestModInstallation: (() -> Void)?
     var onRequestOpenFactorioModWebsite: (() -> Void)?
+    var onRequestStartFactorio: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -24,7 +25,7 @@ struct ErrorContent: View {
                         .frame(maxHeight: 40)
                     VStack(alignment: .leading, ) {
                         Text("Access has been granted")
-                        Text("You can revoke it from application menu")
+                        Text("You can revoke access from application menu")
                             .foregroundColor(.secondary)
                     }
                 } else {
@@ -81,6 +82,8 @@ struct ErrorContent: View {
                 .disabled(modInstalled)
             }
             .frame(maxWidth: .infinity)
+            .opacity(folderAccess ? 1.0 : 0.2)
+            .disabled(!folderAccess)
 
             HStack {
                 Image(systemName: "gearshape")
@@ -89,10 +92,18 @@ struct ErrorContent: View {
                     .frame(maxHeight: 40)
                 Text("Factorio is not running")
                 Spacer()
+                Button(action: {onRequestStartFactorio?()}) {
+                    HStack(alignment: .firstTextBaseline) {
+                        Image(systemName: "minus.diamond").rotationEffect(Angle(degrees: 90))
+                        Text("Start Factorio")
+                    }
+                }
+                .controlSize(.large)
             }
             .frame(maxWidth: .infinity)
+            .opacity((folderAccess && modInstalled) ? 1.0 : 0.2)
+            .disabled(!folderAccess || !modInstalled)
         }
-        // .frame(maxWidth: 200)
         .padding()
 
     }

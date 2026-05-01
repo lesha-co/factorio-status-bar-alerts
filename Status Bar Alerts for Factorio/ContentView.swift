@@ -3,18 +3,20 @@ import SwiftUI
 struct AlertIconView: View {
     let alert: FactorioAlert
     let count: Int
+    let blink: Bool
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         let i = icon(alert)
-        HStack {
+        HStack(alignment: .bottom) {
             Image(systemName: i.name).foregroundColor(
                 colorScheme == .dark ? i.color : i.UILightThemeColor
             )
-            .font(.system(size: 24))
+            .font(.system(size: 32))
             .frame(width: 40)
-            Text("\(count)").font(.system(size: 24))
+            Text("\(count)").font(.system(size: 16))
         }
+        .opacity((count > 0 && blink == false) ?  1: 0.1)
     }
 }
 struct MainView: View {
@@ -26,12 +28,13 @@ struct MainView: View {
                 ForEach(FactorioAlert.allCases, id: \.self) { alert in
                     AlertIconView(
                         alert: alert,
-                        count: vm.alerts[alert] ?? 0
+                        count: vm.alerts[alert] ?? 0,
+                        blink: vm.blink
                     )
                 }
             }
             Button {
-                if let url = URL(string: "https://lesha.co/donate") {
+                if let url = URL(string: "https://lesha.co/support") {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
@@ -52,17 +55,6 @@ struct ContentView: View {
 
     private var mode: Bool { vm.hasAccess && vm.isModInstalled && vm.isFactorioRunning }
 
-    func respondToModeChange() {
-        guard let window = NSApp.windows.first else { return }
-        var frame = window.frame
-        frame.size.width = mode ? 400 : 550
-        NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.3
-            ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            window.animator().setFrame(frame, display: true)
-        }
-    }
-
     func openModWebsite() {
         if let url = URL(string: "https://mods.factorio.com/mod/" + modName) {
             NSWorkspace.shared.open(url)
@@ -79,17 +71,12 @@ struct ContentView: View {
                     modInstalled: vm.isModInstalled,
                     onRequestFolderAccess: grantAccess,
                     onRequestModInstallation: onModInstall,
-                    onRequestOpenFactorioModWebsite: openModWebsite
+                    onRequestOpenFactorioModWebsite: openModWebsite,
+                    onRequestStartFactorio: {}
                 )
             }
         }
-        .frame(maxWidth: 550, idealHeight: 200, alignment: .init(horizontal: .center, vertical: .top))
-        .onChange(of: mode) {
-            respondToModeChange()
-        }
-        .onAppear() {
-            respondToModeChange()
-        }
+        .frame(width: 550, height: 200)
     }
 }
 

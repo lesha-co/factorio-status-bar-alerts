@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Keeps the security-scoped resource alive for the lifetime of the app.
     private var securityScopedURL: URL?
 
-    private var alertActive: Bool = false
+    
 
     private var blinkTimer: Timer?
 
@@ -53,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 button.layer?.backgroundColor = NSColor(_icon.color).cgColor
                 button.layer?.cornerRadius = 4
                 button.layer?.masksToBounds = true
-                button.appearsDisabled = self.alertActive
+                button.appearsDisabled = self.viewModel.blink 
             }
 
             buttons[alert] = statusItem
@@ -84,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.blinkTimer?.invalidate()
 
             self.blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                self.alertActive.toggle()
+                self.viewModel.blink.toggle()
                 let runningApps = NSWorkspace.shared.runningApplications
                 let appIdentifiers = runningApps.map {
                     ($0.bundleIdentifier)
@@ -94,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                 for (_, statusItem) in self.buttons {
                     guard let button = statusItem.button else { continue }
-                    button.appearsDisabled = self.alertActive
+                    button.appearsDisabled = self.viewModel.blink
                     button.isHidden = !factorioRunning
                 }
             }
