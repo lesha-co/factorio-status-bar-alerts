@@ -66,7 +66,7 @@ struct ContentView: View {
             if mode {
                 MainView(vm: vm)
             } else {
-                ErrorContent(
+                OnboardingScreen(
                     folderAccess: vm.hasAccess,
                     modInstalled: vm.isModInstalled,
                     onRequestFolderAccess: grantAccess,
@@ -92,5 +92,5 @@ struct ContentView: View {
             return vm
         }(),
         grantAccess: nil
-    )
+    ).frame(width:500)
 }

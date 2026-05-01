@@ -16,8 +16,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Keeps the security-scoped resource alive for the lifetime of the app.
     private var securityScopedURL: URL?
 
-    
-
     private var blinkTimer: Timer?
 
     private func createButton() -> NSStatusItem? {
@@ -34,7 +32,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func getOrCreateButton(alert: FactorioAlert, count: Int) -> NSStatusItem? {
-
         if let currentData = buttons[alert] {
             return currentData
         } else {
@@ -45,15 +42,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let _icon = icon(alert)
 
             if let button = statusItem.button {
-                button.image = NSImage(
+                let symbolConfig = NSImage.SymbolConfiguration(pointSize: 12, weight: .regular)
+                let image = NSImage(
                     systemSymbolName: _icon.name,
                     accessibilityDescription: "Factorio"
-                )
+                )?.withSymbolConfiguration(symbolConfig)
+                button.image = image
+                button.imagePosition = .imageLeading
                 button.wantsLayer = true
                 button.layer?.backgroundColor = NSColor(_icon.color).cgColor
                 button.layer?.cornerRadius = 4
                 button.layer?.masksToBounds = true
-                button.appearsDisabled = self.viewModel.blink 
+                button.appearsDisabled = self.viewModel.blink
             }
 
             buttons[alert] = statusItem
@@ -76,7 +76,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
         }
+    }
 
+    private func updateIsFactorioRunning() {
+        let runningApps = NSWorkspace.shared.runningApplications
+        let appIdentifiers = runningApps.map {
+            ($0.bundleIdentifier)
+        }
+        let factorioRunning = appIdentifiers.contains("com.factorio")
+        self.viewModel.isFactorioRunning = factorioRunning
+    }
+    private func updateIsModInstalled() {
+        self.checkModInstalled()
     }
 
     private func startBlinking() {
@@ -85,17 +96,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             self.blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
                 self.viewModel.blink.toggle()
-                let runningApps = NSWorkspace.shared.runningApplications
-                let appIdentifiers = runningApps.map {
-                    ($0.bundleIdentifier)
-                }
-                let factorioRunning = appIdentifiers.contains("com.factorio")
-                self.viewModel.isFactorioRunning = factorioRunning
+                self.updateIsFactorioRunning()
+                self.updateIsModInstalled()
 
                 for (_, statusItem) in self.buttons {
                     guard let button = statusItem.button else { continue }
                     button.appearsDisabled = self.viewModel.blink
-                    button.isHidden = !factorioRunning
+                    button.isHidden = !self.viewModel.isFactorioRunning
                 }
             }
         }
@@ -167,7 +174,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let url = restoreBookmarkAccess() {
             self.securityScopedURL = url
             self.viewModel.hasAccess = true
-            startMonitoring(baseURL: url)
+            startMonitoring()
         }
     }
 
@@ -176,7 +183,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// Check whether the Factorio mod is installed in the mods directory.
-    private func checkModInstalled(baseURL: URL) {
+    private func checkModInstalled() {
+        guard let baseURL = self.securityScopedURL else { return }
         let modsURL = getModsDirectory(baseURL: baseURL)
         let fm = FileManager.default
         do {
@@ -197,9 +205,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// Begin monitoring the Factorio alerts log file.
-    private func startMonitoring(baseURL: URL) {
+    private func startMonitoring() {
+        guard let baseURL = self.securityScopedURL else { return }
         print("startMonitoring()")
-        checkModInstalled(baseURL: baseURL)
+        checkModInstalled()
         monitorFile(
             fileURL: baseURL.appendingPathComponent(factorioLogFile)
         ) { result in
@@ -243,7 +252,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 try fm.removeItem(at: destinationURL)
                 print("Deleted mod at \(destinationURL.path)")
                 DispatchQueue.main.async {
-                    self.checkModInstalled(baseURL: securityScopedURL)
+                    self.checkModInstalled()
                 }
             } else {
                 print("Mod not found at \(destinationURL.path)")
@@ -259,7 +268,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         let modsURL = getModsDirectory(baseURL: securityScopedURL)
         guard let modSourceURL = Bundle.main.url(forResource: modName, withExtension: nil) else {
-            print("Mod '\(modName)' not found in app bundle")
             return
         }
         let destinationURL = modsURL.appendingPathComponent(modName)
@@ -271,7 +279,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             try fm.copyItem(at: modSourceURL, to: destinationURL)
             print("Installed mod to \(destinationURL.path)")
             DispatchQueue.main.async {
-                self.checkModInstalled(baseURL: securityScopedURL)
+                self.checkModInstalled()
             }
         } catch {
             print("Failed to install mod: \(error)")
@@ -286,7 +294,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             self.securityScopedURL = url
             self.viewModel.hasAccess = true
-            self.startMonitoring(baseURL: url)
+            self.startMonitoring()
         }
     }
 

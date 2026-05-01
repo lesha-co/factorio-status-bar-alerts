@@ -18,7 +18,7 @@ func getURLsForFactorio() -> [URL] {
 
 }
 
-struct ErrorContent: View {
+struct OnboardingScreen: View {
     var folderAccess: Bool
     var modInstalled: Bool
 
@@ -44,21 +44,22 @@ struct ErrorContent: View {
                 if folderAccess {
                     Image(systemName: "folder.fill")
                         .font(.system(size: 32))
-                        .foregroundColor(.secondary)
                         .frame(maxHeight: 40)
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundColor(.green)
                     VStack(alignment: .leading, ) {
                         Text("Access has been granted")
-                        Text("You can revoke access from application menu")
+                        Text("Access can be revoked from application menu")
                             .foregroundColor(.secondary)
                     }
                 } else {
                     Image(systemName: "folder.badge.questionmark")
                         .font(.system(size: 32))
-                        .foregroundColor(.secondary)
                         .frame(maxHeight: 40)
+                        .symbolRenderingMode(.hierarchical)
                     VStack(alignment: .leading, ) {
-                        Text("No access to the folder")
-                        Text("Folder access is required to monitor Factorio alerts.")
+                        Text("No access to Factorio application folder")
+                        Text("Access is required to monitor output of companion mod.")
                             .foregroundColor(.secondary)
                     }
                 }
@@ -76,7 +77,7 @@ struct ErrorContent: View {
                 if modInstalled {
                     Image(systemName: "puzzlepiece.extension.fill")
                         .font(.system(size: 32))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.green)
                         .frame(maxHeight: 40)
                     VStack(alignment: .leading, ) {
                         Text("Mod is installed")
@@ -149,19 +150,19 @@ struct ErrorContent: View {
 }
 
 #Preview("No access") {
-    ErrorContent(
+    OnboardingScreen(
         folderAccess: false, modInstalled: false
     )
 }
 
 #Preview("With folder access") {
-    ErrorContent(
+    OnboardingScreen(
         folderAccess: true, modInstalled: false
     )
 }
 
 #Preview("Mod is installed") {
-    ErrorContent(
+    OnboardingScreen(
         folderAccess: true, modInstalled: true
     )
 }
