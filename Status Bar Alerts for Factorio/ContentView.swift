@@ -16,7 +16,7 @@ struct AlertIconView: View {
             .frame(width: 40)
             Text("\(count)").font(.system(size: 16))
         }
-        .opacity((count > 0 && blink == false) ?  1: 0.1)
+        .opacity((count > 0 && blink == false) ? 1 : 0.1)
     }
 }
 struct MainView: View {
@@ -43,7 +43,7 @@ struct MainView: View {
                     .foregroundStyle(Color.primary, Color.accentColor)
                 Text("Consider donating")
             }
-            
+
         }.padding()
     }
 }
@@ -72,11 +72,9 @@ struct ContentView: View {
                     onRequestFolderAccess: grantAccess,
                     onRequestModInstallation: onModInstall,
                     onRequestOpenFactorioModWebsite: openModWebsite,
-                    onRequestStartFactorio: {}
                 )
             }
         }
-        .frame(width: 550, height: 200)
     }
 }
 

@@ -6,6 +6,18 @@
 //
 import SwiftUI
 
+func getURLsForFactorio() -> [URL] {
+    let bundleIdentifier = "com.factorio"
+    guard let urls = LSCopyApplicationURLsForBundleIdentifier(bundleIdentifier as CFString, nil)
+    else {
+        return []
+    }
+    let urls2 = urls.takeRetainedValue() as? [URL] ?? []
+
+    return urls2
+
+}
+
 struct ErrorContent: View {
     var folderAccess: Bool
     var modInstalled: Bool
@@ -13,7 +25,18 @@ struct ErrorContent: View {
     var onRequestFolderAccess: (() -> Void)?
     var onRequestModInstallation: (() -> Void)?
     var onRequestOpenFactorioModWebsite: (() -> Void)?
-    var onRequestStartFactorio: (() -> Void)?
+
+    @AppStorage("selectedApp") var selectedApp: URL?
+    var factorioURLs: [URL] { getURLsForFactorio() }
+
+    func startFactorio() {
+        if let url = selectedApp {
+            NSWorkspace.shared.openApplication(
+                at: url,
+                configuration: NSWorkspace.OpenConfiguration()
+            )
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -90,10 +113,20 @@ struct ErrorContent: View {
                     .font(.system(size: 32))
                     .foregroundColor(.secondary)
                     .frame(maxHeight: 40)
-                Text("Factorio is not running")
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Factorio is not running")
+                    Picker("Application", selection: $selectedApp) {
+                        ForEach(factorioURLs, id: \.path) { url in
+                            Text(url.path).tag(url)
+                        }
+                    }
+                    .labelsHidden()
+                }.frame(width: 300)
                 Spacer()
-                Button(action: {onRequestStartFactorio?()}) {
+
+                Button(action: { startFactorio() }) {
                     HStack(alignment: .firstTextBaseline) {
+                        // actually IEC 60417-5104 which is MOST fitting symbol
                         Image(systemName: "minus.diamond").rotationEffect(Angle(degrees: 90))
                         Text("Start Factorio")
                     }
@@ -105,27 +138,30 @@ struct ErrorContent: View {
             .disabled(!folderAccess || !modInstalled)
         }
         .padding()
-
+        .onAppear {
+            if factorioURLs.isEmpty { return }
+            if let selectedApp, factorioURLs.contains(where: { $0 == selectedApp }) {
+                return
+            }
+            selectedApp = factorioURLs.first
+        }
     }
 }
 
 #Preview("No access") {
     ErrorContent(
         folderAccess: false, modInstalled: false
-
     )
 }
 
 #Preview("With folder access") {
     ErrorContent(
         folderAccess: true, modInstalled: false
-
     )
 }
 
 #Preview("Mod is installed") {
     ErrorContent(
         folderAccess: true, modInstalled: true
-
     )
 }
