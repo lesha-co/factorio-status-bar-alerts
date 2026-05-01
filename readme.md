@@ -3,3 +3,5 @@
 # MacOS status bar alerts for Factorio
 
 Ever left your factory unattended and came back to it griefed by biters? Not anymore!
+
+![image](images/Screenshot%202026-05-01%20at%2004.31.01.png)
