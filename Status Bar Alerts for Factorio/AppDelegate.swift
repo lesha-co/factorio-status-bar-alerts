@@ -5,7 +5,7 @@ let factorioAppSupportURL = URL(
     filePath: NSString("~/Library/Application Support/factorio/")
         .expandingTildeInPath)
 
-let factorioLogFile = "script-output/alerts.log"
+let factorioLogFile = "script-output/macos-status-bar-alerts/alerts.log"
 let factorioModsDir = "mods"
 
 class AppDelegate: NSObject, NSApplicationDelegate {
