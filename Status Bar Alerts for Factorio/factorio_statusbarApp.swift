@@ -23,6 +23,11 @@ struct factorio_statusbarApp: App {
         }
         .windowResizability(.contentSize)
         .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About Status Bar Alerts for Factorio") {
+                    appDelegate.showAbout()
+                }
+            }
             MenuCommands(
                 viewModel: appDelegate.viewModel,
                 revokeAccess: appDelegate.revokeAccess,

@@ -12,6 +12,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var popover = NSPopover()
     private var buttons: [FactorioAlert: NSStatusItem] = [:]
+    private var aboutWindow: NSWindow?
+
+    func showAbout() {
+        if let existing = aboutWindow, existing.isVisible {
+            existing.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        let hostingView = NSHostingController(rootView: AboutView())
+        let window = NSPanel(
+            contentRect: .zero,
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        window.contentViewController = hostingView
+        window.title = "About"
+        window.isReleasedWhenClosed = false
+        window.setContentSize(hostingView.view.fittingSize)
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        aboutWindow = window
+    }
     let viewModel = ViewModel()
     /// Keeps the security-scoped resource alive for the lifetime of the app.
     private var securityScopedURL: URL?

@@ -23,7 +23,7 @@ struct MainView: View {
     @ObservedObject var vm: ViewModel
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(alignment: .trailing, spacing: 16) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
                 ForEach(FactorioAlert.allCases, id: \.self) { alert in
                     AlertIconView(
@@ -38,10 +38,10 @@ struct MainView: View {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
-                Image(systemName: "heart.circle")
+                Image(systemName: "heart.fill")
                     .symbolRenderingMode(.palette)
-                    .foregroundStyle(Color.primary, Color.accentColor)
-                Text("Consider donating")
+                    .foregroundStyle(Color.accentColor)
+                Text("Support the developer")
             }
 
         }.padding()
