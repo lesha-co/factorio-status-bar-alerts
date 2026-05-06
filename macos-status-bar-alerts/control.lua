@@ -1,4 +1,4 @@
-local last_state = nil
+local last_value = {}
 
 local function get_alerts_as_string(player)
     local alerts = player.get_alerts({})
@@ -27,8 +27,8 @@ script.on_event(
     function(event)
         for _, player in pairs(game.players) do
             local result = get_alerts_as_string(player)
-            if result ~= last_state then
-                last_state = result
+            if result ~= last_value[player.index] then
+                last_value[player.index] = result
                 helpers.write_file("macos-status-bar-alerts/alerts.log", event.tick .. ',' .. result, false, player
                     .index)
             end
@@ -63,7 +63,7 @@ local function app_companion_notice(player)
     })
     content.style.horizontal_align = "center"
     content.style.vertical_spacing = 10
-    content.style.padding = {10, 10, 10, 10}
+    content.style.padding = { 10, 10, 10, 10 }
 
     content.add({
         type = "label",

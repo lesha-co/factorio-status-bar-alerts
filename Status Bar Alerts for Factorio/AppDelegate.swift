@@ -54,6 +54,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     }
 
+    private func setButtonBlink(button: NSStatusBarButton) {
+        button.layer?.backgroundColor = button.layer?.backgroundColor?.copy(
+            alpha: self.viewModel.blink ? 0.2 : 1.0)
+    }
     private func getOrCreateButton(alert: FactorioAlert, count: Int) -> NSStatusItem? {
         if let currentData = buttons[alert] {
             return currentData
@@ -76,7 +80,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 button.layer?.backgroundColor = NSColor(_icon.color).cgColor
                 button.layer?.cornerRadius = 4
                 button.layer?.masksToBounds = true
-                button.appearsDisabled = self.viewModel.blink
+                button.contentTintColor = NSColor(_icon.statusBarColor)
+                setButtonBlink(button: button)
             }
 
             buttons[alert] = statusItem
@@ -124,7 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                 for (_, statusItem) in self.buttons {
                     guard let button = statusItem.button else { continue }
-                    button.appearsDisabled = self.viewModel.blink
+                    self.setButtonBlink(button: button)
                     button.isHidden = !self.viewModel.isFactorioRunning
                 }
             }
@@ -137,14 +142,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func syncTimer(currentTick: Int) {
-        // let ticksSinceLastWhole = currentTick % 60
-        // let ticksToNextWhole = 60 - ticksSinceLastWhole
-        // let secondsToNextWhole = Double(ticksToNextWhole) / 60.0
-        DispatchQueue.main.async {
-            self.startBlinking()
-        }
-    }
 
     func createAlerts(components: [String]) -> [FactorioAlert: Int] {
         var alerts: [FactorioAlert: Int] = Dictionary(
@@ -180,7 +177,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        syncTimer(currentTick: tick)
+//        syncTimer(currentTick: tick)
         let alerts = createAlerts(components: components)
         self.setAlerts(alerts: alerts)
     }

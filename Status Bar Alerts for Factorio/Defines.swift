@@ -33,6 +33,7 @@ struct Icon: Hashable {
     let name: String
     let color: Color
     let UILightThemeColor: Color
+    let statusBarColor: Color
 }
 
 func icon(_ alert: FactorioAlert) -> Icon {
@@ -41,57 +42,64 @@ func icon(_ alert: FactorioAlert) -> Icon {
         .init(
             name: "exclamationmark.triangle.fill",
             color: .red,
-            UILightThemeColor: .red
+            UILightThemeColor: .red,
+            statusBarColor: .white
         )
     case .entity_destroyed:
         .init(
             name: "xmark.diamond.fill",
             color: .red,
-            UILightThemeColor: .red
+            UILightThemeColor: .red,
+            statusBarColor: .white
         )
     case .no_material_for_construction:
         .init(
             name: "gearshape.fill",
             color: .yellow,
-            UILightThemeColor: .primary
+            UILightThemeColor: .primary,
+            statusBarColor: .black
         )
     case .no_storage:
         .init(
             name: "suitcase.fill",
             color: .yellow,
-            UILightThemeColor: .primary
+            UILightThemeColor: .primary,
+            statusBarColor: .black
         )
     case .not_enough_construction_robots:
         .init(
             name: "drone",
             color: .yellow,
-            UILightThemeColor: .primary
+            UILightThemeColor: .primary,
+            statusBarColor: .black
         )
     case .not_enough_repair_packs:
         .init(
             name: "wrench.and.screwdriver.fill",
             color: .yellow,
-            UILightThemeColor: .primary
+            UILightThemeColor: .primary,
+            statusBarColor: .black
         )
     case .turret_fire:
         .init(
-            name: "exclamationmark.triangle",
+            name: "exclamationmark.triangle.fill",
             color: .yellow,
-            UILightThemeColor: .primary
+            UILightThemeColor: .primary,
+            statusBarColor: .black
         )
     case .train_out_of_fuel:
         .init(
             name: "fuelpump.exclamationmark.fill",
             color: .red,
-            UILightThemeColor: .red
+            UILightThemeColor: .red,
+            statusBarColor: .white
         )
     case .train_no_path:
         .init(
             name: "arrow.trianglehead.branch",
             color: .orange,
-            UILightThemeColor: .orange
+            UILightThemeColor: .orange,
+            statusBarColor: .white
         )
     }
 }
-
-
