@@ -9,10 +9,15 @@ let factorioLogFile = "script-output/macos-status-bar-alerts/alerts.log"
 let factorioModsDir = "mods"
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-
     private var popover = NSPopover()
     private var buttons: [FactorioAlert: NSStatusItem] = [:]
+    /// Tracks alerts the user has acknowledged by clicking. Value is the count at acknowledgment time.
+    private var acknowledgedAlerts: [FactorioAlert: Int] = [:]
     private var aboutWindow: NSWindow?
+
+    func resetAcknowledgedAlerts(alert: FactorioAlert) {
+        self.acknowledgedAlerts.removeValue(forKey: alert)
+    }
 
     func showAbout() {
         if let existing = aboutWindow, existing.isVisible {
@@ -54,9 +59,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     }
 
-    private func setButtonBlink(button: NSStatusBarButton) {
-        button.layer?.backgroundColor = button.layer?.backgroundColor?.copy(
-            alpha: self.viewModel.blink ? 0.2 : 1.0)
+    private func setButtonBlink(button: NSStatusBarButton, alert: FactorioAlert) {
+        let isAcknowledged = acknowledgedAlerts[alert] != nil
+        if isAcknowledged {
+            // Acknowledged: static muted appearance, no blinking
+            button.layer?.backgroundColor = button.layer?.backgroundColor?.copy(alpha: 0.2)
+        } else {
+            // Normal: blink between 0.2 and 1.0
+            button.layer?.backgroundColor = button.layer?.backgroundColor?.copy(
+                alpha: self.viewModel.blink ? 0.2 : 1.0)
+        }
     }
     private func getOrCreateButton(alert: FactorioAlert, count: Int) -> NSStatusItem? {
         if let currentData = buttons[alert] {
@@ -81,7 +93,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 button.layer?.cornerRadius = 4
                 button.layer?.masksToBounds = true
                 button.contentTintColor = NSColor(_icon.statusBarColor)
-                setButtonBlink(button: button)
+                setButtonBlink(button: button, alert: alert)
             }
 
             buttons[alert] = statusItem
@@ -94,11 +106,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         DispatchQueue.main.async { [self] in
             self.viewModel.alerts = alerts
             for (alert, count) in alerts {
+                // Un-acknowledge if the count changed since acknowledgment
+                if let ackCount = self.acknowledgedAlerts[alert], ackCount != count {
+                    self.acknowledgedAlerts.removeValue(forKey: alert)
+                }
                 let statusItem = self.getOrCreateButton(alert: alert, count: count)
                 if count == 0 {
                     guard let btn = statusItem else { continue }
                     NSStatusBar.system.removeStatusItem(btn)
                     self.buttons[alert] = nil
+                    self.acknowledgedAlerts.removeValue(forKey: alert)
                 } else {
                     statusItem?.button?.title = "\(count)"
                 }
@@ -127,9 +144,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.updateIsFactorioRunning()
                 self.updateIsModInstalled()
 
-                for (_, statusItem) in self.buttons {
+                for (alert, statusItem) in self.buttons {
                     guard let button = statusItem.button else { continue }
-                    self.setButtonBlink(button: button)
+                    self.setButtonBlink(button: button, alert: alert)
                     button.isHidden = !self.viewModel.isFactorioRunning
                 }
             }
@@ -141,7 +158,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DispatchQueue.main.async(execute: schedule)
         }
     }
-
 
     func createAlerts(components: [String]) -> [FactorioAlert: Int] {
         var alerts: [FactorioAlert: Int] = Dictionary(
@@ -172,12 +188,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
 
-        guard let tick = Int(components[0]) else {
+        guard Int(components[0]) != nil else {
             print("Failed to parse tick: \(components[0])")
             return
         }
 
-//        syncTimer(currentTick: tick)
+        //        syncTimer(currentTick: tick)
         let alerts = createAlerts(components: components)
         self.setAlerts(alerts: alerts)
     }
@@ -249,6 +265,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSStatusBar.system.removeStatusItem(statusItem)
         }
         buttons.removeAll()
+        acknowledgedAlerts.removeAll()
     }
 
     func openFactorioFolder() {
@@ -319,12 +336,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func togglePopover(_ sender: Any?) {
-        //        guard let button = statusItem?.button else { return }
-        //        if popover.isShown {
-        //            popover.performClose(sender)
-        //        } else {
-        //            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-        //            popover.contentViewController?.view.window?.becomeKey()
-        //        }
+        guard let clickedButton = sender as? NSStatusBarButton else { return }
+        for (alert, statusItem) in buttons {
+            if statusItem.button == clickedButton {
+                if let count = viewModel.alerts[alert], count > 0 {
+                    acknowledgedAlerts[alert] = count
+                }
+                break
+            }
+        }
     }
 }

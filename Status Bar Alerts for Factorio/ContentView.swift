@@ -4,23 +4,30 @@ struct AlertIconView: View {
     let alert: FactorioAlert
     let count: Int
     let blink: Bool
+    let onAcknowledge: () -> Void
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         let i = icon(alert)
-        HStack(alignment: .bottom) {
-            Image(systemName: i.name).foregroundColor(
-                colorScheme == .dark ? i.color : i.UILightThemeColor
-            )
-            .font(.system(size: 32))
-            .frame(width: 40)
-            Text("\(count)").font(.system(size: 16))
+        VStack {
+            HStack(alignment: .bottom) {
+                Image(systemName: i.name).foregroundColor(
+                    colorScheme == .dark ? i.color : i.UILightThemeColor
+                )
+                .font(.system(size: 32))
+                .frame(width: 40)
+                Text("\(count)").font(.system(size: 16))
+            }
+            .opacity((count > 0 && blink == false) ? 1 : 0.1)
+            Button("Acknowledge") {
+                onAcknowledge()
+            }
         }
-        .opacity((count > 0 && blink == false) ? 1 : 0.1)
     }
 }
 struct MainView: View {
     @ObservedObject var vm: ViewModel
+    var resetAcknowledgedAlerts: ((FactorioAlert) -> Void)
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 16) {
@@ -29,7 +36,10 @@ struct MainView: View {
                     AlertIconView(
                         alert: alert,
                         count: vm.alerts[alert] ?? 0,
-                        blink: vm.blink
+                        blink: vm.blink,
+                        onAcknowledge: {
+                            resetAcknowledgedAlerts(alert)
+                        }
                     )
                 }
             }
@@ -52,6 +62,7 @@ struct ContentView: View {
     @ObservedObject var vm: ViewModel
     var grantAccess: (() -> Void)?
     var onModInstall: (() -> Void)?
+    var resetAcknowledgedAlerts: ((FactorioAlert) -> Void)
 
     private var mode: Bool { vm.hasAccess && vm.isModInstalled && vm.isFactorioRunning }
 
@@ -64,7 +75,7 @@ struct ContentView: View {
     var body: some View {
         Group {
             if mode {
-                MainView(vm: vm)
+                MainView(vm: vm, resetAcknowledgedAlerts: resetAcknowledgedAlerts)
             } else {
                 OnboardingScreen(
                     folderAccess: vm.hasAccess,
@@ -91,6 +102,6 @@ struct ContentView: View {
             vm.isFactorioRunning = true
             return vm
         }(),
-        grantAccess: nil
-    ).frame(width:500)
+        grantAccess: nil, resetAcknowledgedAlerts:  { _ in }
+    ).frame(width: 500)
 }
