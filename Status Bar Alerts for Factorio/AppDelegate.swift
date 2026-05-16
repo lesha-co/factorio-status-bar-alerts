@@ -12,7 +12,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var popover = NSPopover()
     private var buttons: [FactorioAlert: NSStatusItem] = [:]
     private var aboutWindow: NSWindow?
-
+    private var logURL: URL?
+    let viewModel = ViewModel()
+    /// Keeps the security-scoped resource alive for the lifetime of the app.
+    private var securityScopedURL: URL?
     func showAbout() {
         if let existing = aboutWindow, existing.isVisible {
             existing.makeKeyAndOrderFront(nil)
@@ -34,12 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.makeKeyAndOrderFront(nil)
         aboutWindow = window
     }
-    let viewModel = ViewModel()
-    /// Keeps the security-scoped resource alive for the lifetime of the app.
-    private var securityScopedURL: URL?
 
+    // MARK: - Buttons
     private var blinkTimer: Timer?
-
     private func createButton() -> NSStatusItem? {
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
@@ -52,7 +52,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return nil
 
     }
-
     private func setButtonBlink(button: NSStatusBarButton, alert: FactorioAlert) {
         let isAcknowledged = viewModel.acknowledgedAlerts[alert] != nil
         if isAcknowledged {
@@ -94,7 +93,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
     }
+    private func startBlinking() {
+        let schedule = {
+            self.blinkTimer?.invalidate()
 
+            self.blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
+                self.viewModel.blink.toggle()
+                self.updateIsFactorioRunning()
+                self.updateIsModInstalled()
+
+                if self.viewModel.isFactorioRunning {
+                    for (alert, statusItem) in self.buttons {
+                        guard let button = statusItem.button else { continue }
+                        self.setButtonBlink(button: button, alert: alert)
+                    }
+                } else {
+                    self.removeButtons()
+                }
+            }
+        }
+
+        if Thread.isMainThread {
+            schedule()
+        } else {
+            DispatchQueue.main.async(execute: schedule)
+        }
+    }
+    func removeButtons() {
+        for (_, statusItem) in buttons {
+            NSStatusBar.system.removeStatusItem(statusItem)
+        }
+        buttons.removeAll()
+        viewModel.alerts = [:]
+        viewModel.acknowledgedAlerts = [:]
+    }
+
+    // MARK: - Other
     private func setAlerts(alerts: [FactorioAlert: Int]) {
         DispatchQueue.main.async { [self] in
             self.viewModel.alerts = alerts
@@ -115,39 +149,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-
     private func updateIsFactorioRunning() {
         let runningApps = NSWorkspace.shared.runningApplications
-        let appIdentifiers = runningApps.map {($0.bundleIdentifier)}
+        let appIdentifiers = runningApps.map { ($0.bundleIdentifier) }
         let factorioRunning = appIdentifiers.contains("com.factorio")
         self.viewModel.isFactorioRunning = factorioRunning
-    }
-    private func updateIsModInstalled() {
-        self.checkModInstalled()
-    }
-
-    private func startBlinking() {
-        let schedule = {
-            self.blinkTimer?.invalidate()
-
-            self.blinkTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-                self.viewModel.blink.toggle()
-                self.updateIsFactorioRunning()
-                self.updateIsModInstalled()
-
-                for (alert, statusItem) in self.buttons {
-                    guard let button = statusItem.button else { continue }
-                    self.setButtonBlink(button: button, alert: alert)
-                    button.isHidden = !self.viewModel.isFactorioRunning
-                }
-            }
-        }
-
-        if Thread.isMainThread {
-            schedule()
-        } else {
-            DispatchQueue.main.async(execute: schedule)
-        }
     }
 
     func createAlerts(components: [String]) -> [FactorioAlert: Int] {
@@ -168,23 +174,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         return alerts
     }
-
     func onFileChange(data: String) {
         let trimmed = data.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let components = trimmed.components(separatedBy: ",")
 
         guard !trimmed.isEmpty else {
             self.setAlerts(alerts: [:])
             return
         }
 
+        let components = trimmed.components(separatedBy: ",").filter { !$0.isEmpty }
+
         guard Int(components[0]) != nil else {
             print("Failed to parse tick: \(components[0])")
             return
         }
 
-        //        syncTimer(currentTick: tick)
         let alerts = createAlerts(components: components)
         self.setAlerts(alerts: alerts)
     }
@@ -199,51 +203,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         startBlinking()
         // Try to restore a previously-saved security bookmark
         if let url = restoreBookmarkAccess() {
-            self.securityScopedURL = url
-            self.viewModel.hasAccess = true
-            startMonitoring()
+            onHasAccess(bookmark: url)
         }
     }
-
     func getModsDirectory(baseURL: URL) -> URL {
         return baseURL.appendingPathComponent(factorioModsDir)
     }
 
-    /// Check whether the Factorio mod is installed in the mods directory.
-    private func checkModInstalled() {
-        guard let baseURL = self.securityScopedURL else { return }
-        let modsURL = getModsDirectory(baseURL: baseURL)
-        let fm = FileManager.default
-        do {
-            let contents = try fm.contentsOfDirectory(atPath: modsURL.path)
-            let found = contents.contains { $0.hasPrefix(modName) }
-            DispatchQueue.main.async {
-                self.viewModel.isModInstalled = found
-            }
-            if !found {
-                print("Mod '\(modName)' not found in \(modsURL.path)")
-            }
-        } catch {
-            print("Failed to list mods directory: \(error)")
-            DispatchQueue.main.async {
-                self.viewModel.isModInstalled = false
-            }
-        }
+    func updateFromLogFile() {
+        guard let logURL = self.logURL else { return }
+        guard let result = try? String(contentsOf: logURL, encoding: .utf8) else { return }
+        self.onFileChange(data: result)
     }
 
-    /// Begin monitoring the Factorio alerts log file.
-    private func startMonitoring() {
-        guard let baseURL = self.securityScopedURL else { return }
-        print("startMonitoring()")
-        checkModInstalled()
-        monitorFile(
-            fileURL: baseURL.appendingPathComponent(factorioLogFile)
-        ) { result in
-            self.onFileChange(data: result)
-        }
-    }
-
-    /// Called from the menu bar to revoke folder access.
     func revokeAccess() {
         resetBookmark(securityScopedURL: securityScopedURL)
         securityScopedURL = nil
@@ -251,14 +223,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         fileSource = nil
         viewModel.hasAccess = false
         viewModel.isModInstalled = false
-        viewModel.alerts = [:]
-        for (_, statusItem) in buttons {
-            NSStatusBar.system.removeStatusItem(statusItem)
-        }
-        buttons.removeAll()
-        viewModel.acknowledgedAlerts.removeAll()
+        removeButtons()
     }
-
     func openFactorioFolder() {
         guard let securityScopedURL else {
             print("No base URL set")
@@ -267,6 +233,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let modsURL = getModsDirectory(baseURL: securityScopedURL)
         NSWorkspace.shared.open(modsURL)
     }
+
+    // MARK: - Mods
     func deleteMod() {
         guard let securityScopedURL else {
             print("No base URL set")
@@ -280,7 +248,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 try fm.removeItem(at: destinationURL)
                 print("Deleted mod at \(destinationURL.path)")
                 DispatchQueue.main.async {
-                    self.checkModInstalled()
+                    self.updateIsModInstalled()
                 }
             } else {
                 print("Mod not found at \(destinationURL.path)")
@@ -307,31 +275,62 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             try fm.copyItem(at: modSourceURL, to: destinationURL)
             print("Installed mod to \(destinationURL.path)")
             DispatchQueue.main.async {
-                self.checkModInstalled()
+                self.updateIsModInstalled()
             }
         } catch {
             print("Failed to install mod: \(error)")
         }
     }
-
-    /// Called from the UI when the user taps "Grant Access".
+    private func updateIsModInstalled() {
+        guard let baseURL = self.securityScopedURL else { return }
+        let modsURL = getModsDirectory(baseURL: baseURL)
+        let fm = FileManager.default
+        do {
+            let contents = try fm.contentsOfDirectory(atPath: modsURL.path)
+            let found = contents.contains { $0.hasPrefix(modName) }
+            DispatchQueue.main.async {
+                self.viewModel.isModInstalled = found
+            }
+            if !found {
+                print("Mod '\(modName)' not found in \(modsURL.path)")
+            }
+        } catch {
+            print("Failed to list mods directory: \(error)")
+            DispatchQueue.main.async {
+                self.viewModel.isModInstalled = false
+            }
+        }
+    }
+    // MARK: - Access
     func grantAccess() {
         requestAccessToAppSupport(directoryURL: factorioAppSupportURL) { [weak self] url in
             guard let self, let url else {
                 return
             }
-            self.securityScopedURL = url
-            self.viewModel.hasAccess = true
-            self.startMonitoring()
+            self.onHasAccess(bookmark: url)
+        }
+    }
+    func onHasAccess(bookmark: URL) {
+        self.securityScopedURL = bookmark
+        self.viewModel.hasAccess = true
+        let logURL = bookmark.appendingPathComponent(factorioLogFile)
+        self.logURL = logURL
+
+        updateIsModInstalled()
+
+        monitorFile(fileURL: logURL) {
+            self.updateFromLogFile()
         }
     }
 
+    // MARK: - Popover
     @objc func togglePopover(_ sender: Any?) {
         guard let clickedButton = sender as? NSStatusBarButton else { return }
         for (alert, statusItem) in buttons {
             if statusItem.button == clickedButton {
                 if let count = viewModel.alerts[alert], count > 0 {
                     viewModel.acknowledgedAlerts[alert] = count
+                    self.setButtonBlink(button: clickedButton, alert: alert)
                 }
                 break
             }

@@ -2,13 +2,11 @@ import AppKit
 
 var fileSource: DispatchSourceFileSystemObject?
 
-func monitorFile(fileURL: URL, completion: @escaping (String) -> Void) {
-    
+func monitorFile(fileURL: URL, completion: @escaping () -> Void) {
     let directoryURL = fileURL.deletingLastPathComponent()
     let fileName = fileURL.lastPathComponent
     print("Watching \(fileName) in \(directoryURL.path)")
 
-    // Watch the file itself for content changes
     startFileWatch(fileURL: fileURL, fileName: fileName, onFileChange: completion)
 
     // Also watch the directory so we can re-establish the file watch
@@ -40,7 +38,7 @@ func monitorFile(fileURL: URL, completion: @escaping (String) -> Void) {
 }
 
 private func startFileWatch(
-    fileURL: URL, fileName: String, onFileChange: @escaping (String) -> Void
+    fileURL: URL, fileName: String, onFileChange: @escaping () -> Void
 ) {
     // Cancel any existing file watch
     fileSource?.cancel()
@@ -67,13 +65,7 @@ private func startFileWatch(
             return
         }
 
-        do {
-            let contents = try String(contentsOf: fileURL, encoding: .utf8)
-            print("File \(fileName) changed. Contents:\n\(contents)")
-            onFileChange(contents)
-        } catch {
-            print("Failed to read file \(fileName): \(error)")
-        }
+        onFileChange()
     }
 
     source.setCancelHandler {
@@ -83,9 +75,6 @@ private func startFileWatch(
     fileSource = source
     source.resume()
     print("Now watching file: \(fileName)")
-
-    if let contents = try? String(contentsOf: fileURL, encoding: .utf8) {
-        onFileChange(contents)
-    }
+    onFileChange()
 
 }
