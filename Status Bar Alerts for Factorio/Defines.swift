@@ -18,7 +18,6 @@ enum FactorioAlert: Int, CaseIterable {
     // case platform_tile_building_blocked = 5
     // case turret_out_of_ammo = 6
     case turret_fire = 7
-    case custom = 8
     case no_storage = 9
     case train_out_of_fuel = 10
     case train_no_path = 11
@@ -27,6 +26,7 @@ enum FactorioAlert: Int, CaseIterable {
     // case unclaimed_carg = 14
     // case no_roboport_storage = 15
     // case pipeline_overextended = 16
+    case custom = 8
 }
 
 struct Icon: Hashable {
