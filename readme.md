@@ -4,7 +4,7 @@
 
 Ever left your factory unattended and came back to it griefed by biters? Not anymore!
 
-![image](/blog/Screenshot%202026-05-16%20at%2023.34.27.png)
+![image](images/Screenshot%202026-05-16%20at%2023.34.27.png)
 
 # What you can do
 
