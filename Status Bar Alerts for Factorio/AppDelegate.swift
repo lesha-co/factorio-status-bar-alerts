@@ -83,10 +83,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 button.image = image
                 button.imagePosition = .imageLeading
                 button.wantsLayer = true
-                button.layer?.backgroundColor = NSColor(_icon.color).cgColor
+                button.layer?.backgroundColor = NSColor(_icon.statusBarButtonContentTintColor).cgColor
                 button.layer?.cornerRadius = 4
                 button.layer?.masksToBounds = true
-                button.contentTintColor = NSColor(_icon.statusBarColor)
                 setButtonBlink(button: button, alert: alert)
             }
 

@@ -15,7 +15,7 @@ struct AlertIconView: View {
             HStack(alignment: .center) {
                 HStack(alignment: .bottom) {
                     Image(systemName: i.name).foregroundColor(
-                        colorScheme == .dark ? i.color : i.UILightThemeColor
+                        colorScheme == .dark ? i.UIDarkThemeColor : i.UILightThemeColor
                     )
                     .font(.system(size: 32))
                     .frame(width: 40)
@@ -47,7 +47,7 @@ struct MainView: View {
 
     var body: some View {
         VStack(alignment: .trailing, spacing: 16) {
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3)) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 4 )) {
                 ForEach(FactorioAlert.allCases, id: \.self) { alert in
                     AlertIconView(
                         alert: alert,

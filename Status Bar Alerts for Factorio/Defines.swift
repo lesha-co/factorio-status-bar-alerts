@@ -18,7 +18,7 @@ enum FactorioAlert: Int, CaseIterable {
     // case platform_tile_building_blocked = 5
     // case turret_out_of_ammo = 6
     case turret_fire = 7
-    // case custom = 8
+    case custom = 8
     case no_storage = 9
     case train_out_of_fuel = 10
     case train_no_path = 11
@@ -31,9 +31,9 @@ enum FactorioAlert: Int, CaseIterable {
 
 struct Icon: Hashable {
     let name: String
-    let color: Color
+    let UIDarkThemeColor: Color
     let UILightThemeColor: Color
-    let statusBarColor: Color
+    let statusBarButtonContentTintColor: Color
 }
 
 func icon(_ alert: FactorioAlert) -> Icon {
@@ -41,65 +41,73 @@ func icon(_ alert: FactorioAlert) -> Icon {
     case .entity_under_attack:
         .init(
             name: "exclamationmark.triangle.fill",
-            color: .red,
+            UIDarkThemeColor: .red,
             UILightThemeColor: .red,
-            statusBarColor: .white
+            statusBarButtonContentTintColor: .red
         )
     case .entity_destroyed:
         .init(
             name: "xmark.diamond.fill",
-            color: .red,
+            UIDarkThemeColor: .red,
             UILightThemeColor: .red,
-            statusBarColor: .white
+            statusBarButtonContentTintColor: .red
         )
     case .no_material_for_construction:
         .init(
             name: "gearshape.fill",
-            color: .yellow,
+            UIDarkThemeColor: .yellow,
             UILightThemeColor: .primary,
-            statusBarColor: .black
+            statusBarButtonContentTintColor: .yellow
         )
     case .no_storage:
         .init(
             name: "suitcase.fill",
-            color: .yellow,
+            UIDarkThemeColor: .yellow,
             UILightThemeColor: .primary,
-            statusBarColor: .black
+            statusBarButtonContentTintColor: .yellow
         )
     case .not_enough_construction_robots:
         .init(
             name: "drone",
-            color: .yellow,
+            UIDarkThemeColor: .yellow,
             UILightThemeColor: .primary,
-            statusBarColor: .black
+            statusBarButtonContentTintColor: .yellow
         )
     case .not_enough_repair_packs:
         .init(
             name: "wrench.and.screwdriver.fill",
-            color: .yellow,
+            UIDarkThemeColor: .yellow,
             UILightThemeColor: .primary,
-            statusBarColor: .black
+            statusBarButtonContentTintColor: .yellow
         )
     case .turret_fire:
         .init(
             name: "exclamationmark.triangle.fill",
-            color: .yellow,
+            UIDarkThemeColor: .yellow,
             UILightThemeColor: .primary,
-            statusBarColor: .black
+            statusBarButtonContentTintColor: .yellow
         )
     case .train_out_of_fuel:
         .init(
             name: "fuelpump.exclamationmark.fill",
-            color: .red,
+            UIDarkThemeColor: .red,
             UILightThemeColor: .red,
-            statusBarColor: .white
+            statusBarButtonContentTintColor: .red
         )
     case .train_no_path:
         .init(
             name: "arrow.trianglehead.branch",
-            color: .orange,
+            UIDarkThemeColor: .orange,
             UILightThemeColor: .orange,
-            statusBarColor: .white
+            statusBarButtonContentTintColor: .orange
         )
+    case .custom:
+        .init(
+            name: "questionmark.diamond",
+            UIDarkThemeColor: .purple,
+            UILightThemeColor: .purple,
+            statusBarButtonContentTintColor: .purple
+        )
+
     }
 }
