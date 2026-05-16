@@ -11,13 +11,7 @@ let factorioModsDir = "mods"
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var popover = NSPopover()
     private var buttons: [FactorioAlert: NSStatusItem] = [:]
-    /// Tracks alerts the user has acknowledged by clicking. Value is the count at acknowledgment time.
-    private var acknowledgedAlerts: [FactorioAlert: Int] = [:]
     private var aboutWindow: NSWindow?
-
-    func resetAcknowledgedAlerts(alert: FactorioAlert) {
-        self.acknowledgedAlerts.removeValue(forKey: alert)
-    }
 
     func showAbout() {
         if let existing = aboutWindow, existing.isVisible {
@@ -60,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setButtonBlink(button: NSStatusBarButton, alert: FactorioAlert) {
-        let isAcknowledged = acknowledgedAlerts[alert] != nil
+        let isAcknowledged = viewModel.acknowledgedAlerts[alert] != nil
         if isAcknowledged {
             // Acknowledged: static muted appearance, no blinking
             button.layer?.backgroundColor = button.layer?.backgroundColor?.copy(alpha: 0.2)
@@ -107,15 +101,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.viewModel.alerts = alerts
             for (alert, count) in alerts {
                 // Un-acknowledge if the count changed since acknowledgment
-                if let ackCount = self.acknowledgedAlerts[alert], ackCount != count {
-                    self.acknowledgedAlerts.removeValue(forKey: alert)
+                if let ackCount = self.viewModel.acknowledgedAlerts[alert], ackCount != count {
+                    self.viewModel.acknowledgedAlerts.removeValue(forKey: alert)
                 }
                 let statusItem = self.getOrCreateButton(alert: alert, count: count)
                 if count == 0 {
                     guard let btn = statusItem else { continue }
                     NSStatusBar.system.removeStatusItem(btn)
                     self.buttons[alert] = nil
-                    self.acknowledgedAlerts.removeValue(forKey: alert)
+                    self.viewModel.acknowledgedAlerts.removeValue(forKey: alert)
                 } else {
                     statusItem?.button?.title = "\(count)"
                 }
@@ -125,9 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func updateIsFactorioRunning() {
         let runningApps = NSWorkspace.shared.runningApplications
-        let appIdentifiers = runningApps.map {
-            ($0.bundleIdentifier)
-        }
+        let appIdentifiers = runningApps.map {($0.bundleIdentifier)}
         let factorioRunning = appIdentifiers.contains("com.factorio")
         self.viewModel.isFactorioRunning = factorioRunning
     }
@@ -265,7 +257,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSStatusBar.system.removeStatusItem(statusItem)
         }
         buttons.removeAll()
-        acknowledgedAlerts.removeAll()
+        viewModel.acknowledgedAlerts.removeAll()
     }
 
     func openFactorioFolder() {
@@ -340,7 +332,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for (alert, statusItem) in buttons {
             if statusItem.button == clickedButton {
                 if let count = viewModel.alerts[alert], count > 0 {
-                    acknowledgedAlerts[alert] = count
+                    viewModel.acknowledgedAlerts[alert] = count
                 }
                 break
             }
